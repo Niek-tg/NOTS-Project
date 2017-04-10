@@ -5,4 +5,4 @@ RUN apt-get install software-properties-common -y
 RUN add-apt-repository -y ppa:ethereum/ethereum 
 RUN apt-get update && apt-get install -y ethereum 
 COPY ./genesis.json / ./password.txt /
-CMD geth --password /password.txt account new && geth init /genesis.json && geth bootnode --genkey=boot.key
+CMD geth --password /password.txt account new && geth init /genesis.json && geth bootnode --genkey=boot.key --mine --minerthreads=1 --etherbase=0x0000000000000000000000000000000000000000
