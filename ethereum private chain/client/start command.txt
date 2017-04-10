@@ -1,0 +1,5 @@
+# build it
+docker build -t <imagename> . 
+
+# start the stuff
+docker run -p 30303:30303 <imagename> -e 
