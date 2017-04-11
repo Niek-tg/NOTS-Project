@@ -60,15 +60,18 @@ Voer vervolgens de volgende command uit:
 ```
 peer channel create -o orderer0:7050 -c mychannel -f crypto/orderer/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem
 ```
-Nu een channel gecreerd is kunnen peers de channel joinen. Op moment is de configuratie zo ingesteld dat alleen peer 0 aangeroepen wordt. Join een peer door de command: 
+Nu een channel gecreerd is kunnen peers de channel joinen. Op moment is de configuratie zo ingesteld dat alleen peer 0 aangeroepen wordt. Door de command hieronder kan een peer zich aanmelden: 
 ```
 peer channel join -b mychannel.block
 ```
 Installeer nu de chaincode op peer 0 door de command:
 
 ```
-peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02.
-Vervolgens voer je de command peer chaincode instantiate -o orderer0:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org0MSP.member','Org1MSP.member')"
+peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+```
+Voer vervolgens de volgende command uit:
+```
+peer chaincode instantiate -o orderer0:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org0MSP.member','Org1MSP.member')"
 ```
 Deze command start de chaincode container en creert een beleid met organisaties voor de ledger. Hierbij worden ook de initele waarden meegenomen voor de database. De waarde is een simpele array met hierin een property a die een waarde heeft van 100 en een property b die een waarde heeft van 200. Deze waarden kunnen gemanipuleerd worden door chaincode.
 
