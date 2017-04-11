@@ -1,0 +1,16 @@
+version: '2'
+services:
+  ethereum:
+    build: ./ethereum_client
+    command: geth --rpc -rpcapi "personal,eth,web3" --rpcaddr "0.0.0.0" --rpccorsdomain "http://localhost:3000"
+    ports:
+      - 8545:8545
+  app:
+    build: ./app/
+    command: meteor --allow-superuser
+    working_dir: /home/app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./app/:/home/app
+
