@@ -3,7 +3,7 @@ In dit labaratorium onderzoek ga ik proberen om een Hyperledger netwerk op te ze
 De volgende onderdelen zullen behandeld worden in het onderzoek:
 
 - Netwerk creeren
-- Eigen organisaties toevoegen met peers
+- Bouw een eigen endorsement policy
 - Eigen smart contract implementeren
 - Lees & schrijf operaties op het netwerk uitvoeren
 - Meerdere peers toevoegen
@@ -83,7 +83,7 @@ Op het einde van deze command staat:
 ```
 "{"Args":["invoke","a","b","10"]}'"
 ```
-Hierbij wordt de invoke methode aangeroepen met een aantal argumenten. Dit zal er voor zorgen dat de a property vermindert wordt met 10 en en de b property verhoogd wordt met 10. Na deze command uitgevoerd te hebbenkan je de waarde uitlezen door een query. Dit kan door:
+Hierbij wordt de invoke methode aangeroepen met een aantal argumenten. Dit zal er voor zorgen dat de a property vermindert wordt met 10 en en de b property verhoogd wordt met 10. Na deze command uitgevoerd te hebben kan je de waarde uitlezen door een query. Dit kan door:
 ```
 peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'.
 ```
@@ -91,3 +91,26 @@ De waarde die je zou moeten terug krijgen is:
 ```
 Query Result: 90.
 ```
+
+## Endorsement policy ##
+In een endorsement policy staat beschreven hoe een peer moet omgaan met een transactie. Zo kan je opgeven dat er drie organisaties zijn waarvan een van de drie moet aangeven dat een transactie geldig is.
+
+Een endorsement policy heeft twee hoofdcomponenten, een principal en een treshold gate.
+Een principal identifieert een entity waarvan een signature wordt verwacht. De treshold gate bevat de hoeveelheid principals die nodig zijn om de transactie te kunnen afronden en een lijst van principals die een transactie mogen accepteren of afkeuren.
+
+Hieronder volgt een voorbeeld:
+
+```
+T(2, 'A', ' B', 'C')
+``` 
+
+De policy hierboven wilt de signatures hebben van minimaal twee participant in de opgegeven lijst. De participants in dit voorbeeld zijn: A,B en C.
+
+Het voorbeeld hieronder is wat complexer:
+
+
+```
+T(1, 'A', T(2, 'B', 'C'))
+``` 
+
+Hierin geeft de policy aan, of een signature van principal A te willen of een signature van B en C.
