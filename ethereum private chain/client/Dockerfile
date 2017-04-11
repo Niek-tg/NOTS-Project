@@ -12,4 +12,4 @@ COPY ./entrypoint.sh /entrypoint.sh
 RUN dos2unix /entrypoint.sh && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["127.0.1"]  # Default
+CMD ["127.0.1"]  # Default stuff
