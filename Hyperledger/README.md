@@ -56,7 +56,7 @@ Als eerste gaan we een channel creeren in de CLI container. Open de CLI containe
 ```
 docker exec -it cli bash
 ```
-. Voer vervolgens de volgende command uit: 
+Voer vervolgens de volgende command uit: 
 ```
 peer channel create -o orderer0:7050 -c mychannel -f crypto/orderer/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem
 ```
