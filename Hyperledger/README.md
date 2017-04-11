@@ -15,7 +15,7 @@ Logs weergeven van alle containers:
 docker logs -f cli
 ```
 
-Log weergeven van een specifieke container
+Log weergeven van een specifieke container:
 ```
 docker logs dev-peer0-mycc-1.0
 ```
@@ -30,7 +30,7 @@ Docker container verwijderen:
 docker rmi -f 38c af0 b04
 ```
 
-Netwerk starten
+Netwerk starten:
 ```
 CHANNEL_NAME=mychannel docker-compose up -d 
 ```
