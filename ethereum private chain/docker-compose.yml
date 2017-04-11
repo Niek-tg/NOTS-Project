@@ -6,8 +6,7 @@ services:
       - 30303:30303
   ethereumclient:
     build: ./client/
-    links:
-      - "ethereumhost:host"
     ports:
       - 30304:30303
-    command: "geth bootnode --genkey=boot.key"
+    links:
+      - "ethereumhost:host"
