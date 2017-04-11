@@ -4,3 +4,11 @@ services:
     build: ./ethereum_client/
     ports:
       - 8545:8545
+  app:
+    build: ./app/
+    command: meteor --allow-superuser
+    working_dir: /home/app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./app/:/home/app
