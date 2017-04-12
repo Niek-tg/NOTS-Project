@@ -9,12 +9,12 @@ docker ps
 
 Logs weergeven van alle containers:
 ```
-docker logs -f cli
+docker logs -f <naam>
 ```
 
 Log weergeven van een specifieke container:
 ```
-docker logs dev-peer0-mycc-1.0
+docker logs <naam>
 ```
 
 Alle docker containers afsluiten:
@@ -22,9 +22,9 @@ Alle docker containers afsluiten:
 docker rm -f $(docker ps -aq)
 ```
 
-Docker container verwijderen:
+Docker container verwijderen :
 ```
-docker rmi -f 38c af0 b04
+docker rmi -f <id, eerste 3 tekens> <(optioneel) id, eerste 3 tekens>
 ```
 
 ## Een eigen netwerk starten ##
@@ -76,7 +76,17 @@ Het uiteindelijke pad ziet er dan als volgt uit:
 /usr/local/go/src/github.com/hyperledger/fabric/
 ```
 
-Nu de configuratie klaar is kan de fabric repository gedownload worden.
+Navigeer naar de map hierboven. In deze map moet de configtxgen tool aangeroepen worden.
+
+### configtxgen tool ###
+De configtxgen tool is verantwoordelijk voor het maken een Orderer bootstrap block en een Fabric channel configuratie.
+
+De orderer block is de genesis block (eerste block in de chain) voor de orderering service. De channel configuratie bestand wordt verzonden naar de orderer service wanneer de channel aangemaakt wordt. De ordering service is verantwoordelijk voor het identificieren van clients, bied de clients de mogelijkheid om naar de chain te schrijven en te lezen.
+
+Om de configtxgen tool te kunnen gebruiken moet de tool eerst gebuild worden. Dit kan door middel van de volgende command:
+```
+make configtxgen
+```
 
 Netwerk starten:
 ```
@@ -84,9 +94,7 @@ CHANNEL_NAME=mychannel docker-compose up -d
 ```
 
 ## generateCfgTrx.sh ##
-Dit script voert de configtxgen tool uit. De confixtgen creert twee bestanden. Een "orderer.block" en een "channel.tx".
-De orderer block is de genesis block van de chain voor de ordering service. De ordering service is verantwoordelijk voor het identificieren van clients, bied de clients de mogelijkheid om naar de chain te schrijven en te lezen.
-In de channel.tx bestand staat de configuratie van de aangemaakte channel.
+Dit script is een shell script die de configtxgen tool uitvoert. 
 
 ## Chaincode ##
 Chaincode moet geinstalleerd worden op een peer om lees en schrijf operaties te kunnen uitvoeren. Om een transactie te kunnen maken wordt een container opgestart waarin de chaincode uitgevoerd wordt.
