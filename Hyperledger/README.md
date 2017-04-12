@@ -1,12 +1,4 @@
-In dit labaratorium onderzoek ga ik proberen om een Hyperledger netwerk op te zetten.
-
-De volgende onderdelen zullen behandeld worden in het onderzoek:
-
-- Netwerk creeren
-- Bouw een eigen endorsement policy
-- Eigen smart contract implementeren
-- Lees & schrijf operaties op het netwerk uitvoeren
-- Meerdere peers toevoegen
+In dit labaratorium onderzoek ga ik een Hyperledger netwerk op te zetten.
 
 ## Veelgebruikte commands: ##
 
@@ -34,6 +26,57 @@ Docker container verwijderen:
 ```
 docker rmi -f 38c af0 b04
 ```
+
+## Een eigen netwerk starten ##
+Om een netwerk te starten wordt docker gebruikt. In dit voorbeeld zullen meerdere images gebruikt worden die elk een eigen verantwoordelijk heeft. Om een netwerk te kunnen starten is een linux machine aangeraden.
+
+Download docker composer:
+
+```
+sudo curl -o /usr/local/bin/docker-compose -L "https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)"
+```
+
+Download de programmeertaal Go via https://golang.org/dl/. Minimaal versie 1.8.1 is verplicht.
+Om GO te kunnen gebruiken vanaf de terminal moeten er een aantal paden toegevoegd worden in het bashrc bestand. 
+
+Open een terminal met sudo en open het bashrc bestand:
+```
+nano ~/.bashrc
+```
+
+Voeg de regels hieronder toe aan uw bash bestand onderin. Controleer of de paden overeenkomen met uw eigen paden.
+```
+export GOPATH=/usr/local/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin
+```
+
+U kunt het bestand verlaten door de volgende stappen:
+
+- control x
+- y
+- enter
+
+Om de fabric repository te kunnen clonen is het aangeraden om git te installeren. U kunt ook handmatig de repository downloaden vanaf https://github.com/hyperledger/fabric.
+
+Via git kan de repository gecloned worden via:
+
+```
+git clone https://github.com/hyperledger/fabric.git
+```
+
+Zodra de repository gecloned is moet u de map kopieren naar de volgende plek:
+```
+/usr/local/go/src/github.com
+```
+
+Het uiteindelijke pad ziet er dan als volgt uit:
+
+```
+/usr/local/go/src/github.com/hyperledger/fabric/
+```
+
+Nu de configuratie klaar is kan de fabric repository gedownload worden.
 
 Netwerk starten:
 ```
