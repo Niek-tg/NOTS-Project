@@ -10,6 +10,11 @@ De volgende onderdelen zullen behandeld worden in het onderzoek:
 
 ## Veelgebruikte commands: ##
 
+Actieve dockers weergeven:
+```
+docker ps
+```
+
 Logs weergeven van alle containers:
 ```
 docker logs -f cli
