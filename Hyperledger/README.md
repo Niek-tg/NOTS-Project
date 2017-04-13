@@ -2,6 +2,7 @@ In dit labaratorium onderzoek ga ik een Hyperledger netwerk op te zetten.
 
 Nog verwerken in onderzoek:
 
+- Grammatica 😁
 - Pullen van docker images (http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#prerequisites)
 - Configuratie bestanden: onfigtx.yaml en docker-compose.yaml uitleggen
 - Concepten Hyperledger uitleggen
