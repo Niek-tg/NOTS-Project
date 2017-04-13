@@ -4,7 +4,7 @@ Nog verwerken in onderzoek:
 
 - Grammatica 😁
 - Pullen van docker images (http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#prerequisites)
-- Configuratie bestanden: onfigtx.yaml en docker-compose.yaml uitleggen
+- Configuratie bestanden: configtx.yaml en docker-compose.yaml uitleggen
 - Concepten Hyperledger uitleggen
 
 ## Veelgebruikte commands: ##
