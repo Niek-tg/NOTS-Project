@@ -78,12 +78,12 @@ Het uiteindelijke pad ziet er dan als volgt uit:
 
 Navigeer naar de map hierboven. In deze map moet de configtxgen tool aangeroepen worden.
 
-### configtxgen tool ###
 De configtxgen tool is verantwoordelijk voor het maken een Orderer bootstrap block en een Fabric channel configuratie.
 
 De orderer block is de genesis block (eerste block in de chain) voor de orderering service. De channel configuratie bestand wordt verzonden naar de orderer service wanneer de channel aangemaakt wordt. De ordering service is verantwoordelijk voor het identificieren van clients, bied de clients de mogelijkheid om naar de chain te schrijven en te lezen.
 
 Om de configtxgen tool te kunnen gebruiken moet de tool eerst gebuild worden. Dit kan door middel van de volgende command:
+
 ```
 make configtxgen
 ```
@@ -91,6 +91,7 @@ make configtxgen
 Om te voorkomen dat Hyperledger end to end tests gaat draaien moet de composer compose file aangepast worden. Hiervoor is het noodzakelijk dat regelnummer 205 in commentaar wordt gezet. Dit kan door een "#" teken voor de regel in te voegen. Dit zorg er voor dat we handmatig zelf een netwerk moeten opzetten.
 
 De regel ziet er als volgt uit nadat de regel in commentaar is gezet:
+
 ```
 # command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}'
 ```
@@ -107,6 +108,7 @@ Nu zal de generateCfgTrx shell bestand aangeroepen moeten worden. Dit shell best
 
 
 Creeer de configuratie die nodig is voor het werk:
+
 ```
 ./generateCfgTrx.sh mychannel
 ```
@@ -148,29 +150,39 @@ Installeer de vooraf gedefinieerde chaincode op peer 0:
 peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
-HIER GEBLEVEN
+Om het netwerk te vullen met data kunnen we de init methode aanroepen van de chaincode. In de command hieronder zie je dat de init methode wordt aangeroepen van de chaincode en property a op 100 wordt gezet en property b naar 200. Daarnaast zie je op het eind van de command twee participants staan. Dit geeft aan dat een transactie geslaagd is zodra een van deze participants aangeeft dat de transactie valide is hij toegevoegd zal worden in het netwerk. 
+
+Chaincode in Hyperledger wordt uitgevoerd in een eigen docker container. 
+
+Netwerk vullen met data:
 
 ```
 peer chaincode instantiate -o orderer0:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org0MSP.member','Org1MSP.member')"
 ```
-Deze command start de chaincode container en creert een beleid met organisaties voor de ledger. Hierbij worden ook de initele waarden meegenomen voor de database. De waarde is een simpele array met hierin een property a die een waarde heeft van 100 en een property b die een waarde heeft van 200. Deze waarden kunnen gemanipuleerd worden door chaincode.
 
-Nu alles opgezet is kunen we de chaincode uitvoeren. Dit kan gedaan worden via de volgende command:
+Nu het netwerk gestart en gevuld is met data kunnen we chaincode transacties uitvoeren. In het voorbeeld hieronder wordt de invoke methode aangeroepen. Hierbij wordt a property vermindert met de waarde tien en wordt property b opgehoogd met 10.
+
 ```
 peer chaincode invoke -o orderer0:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem  -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'.
+
 ```
-Op het einde van deze command staat:
-```
-"{"Args":["invoke","a","b","10"]}'"
-```
-Hierbij wordt de invoke methode aangeroepen met een aantal argumenten. Dit zal er voor zorgen dat de a property vermindert wordt met 10 en en de b property verhoogd wordt met 10. Na deze command uitgevoerd te hebben kan je de waarde uitlezen door een query. Dit kan door:
+
+Om te controleren of de transactie geslaagd is kunnen we een lees query uitvoeren. In het voorbeeld hieronder lezen we propery a uit. 
+
+Command om property a uit te lezen:
+
 ```
 peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'.
 ```
+
 De waarde die je zou moeten terug krijgen is: 
+
 ```
 Query Result: 90.
 ```
+
+# Hyperledger concepten #
+Hieronder worden een aantal belangrijke concepten uitgelegd van Hyperledger.
 
 ## Endorsement policy ##
 In een endorsement policy staat beschreven hoe een peer moet omgaan met een transactie. Zo kan je opgeven dat er drie organisaties zijn waarvan een van de drie moet aangeven dat een transactie geldig is.
@@ -187,7 +199,6 @@ T(2, 'A', ' B', 'C')
 De policy hierboven wilt de signatures hebben van minimaal twee participant in de opgegeven lijst. De participants in dit voorbeeld zijn: A,B en C.
 
 Het voorbeeld hieronder is wat complexer:
-
 
 ```
 T(1, 'A', T(2, 'B', 'C'))
