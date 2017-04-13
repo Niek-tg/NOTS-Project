@@ -88,44 +88,68 @@ Om de configtxgen tool te kunnen gebruiken moet de tool eerst gebuild worden. Di
 make configtxgen
 ```
 
-Netwerk starten:
+Om te voorkomen dat Hyperledger end to end tests gaat draaien moet de composer compose file aangepast worden. Hiervoor is het noodzakelijk dat regelnummer 205 in commentaar wordt gezet. Dit kan door een "#" teken voor de regel in te voegen. Dit zorg er voor dat we handmatig zelf een netwerk moeten opzetten.
+
+De regel ziet er als volgt uit nadat de regel in commentaar is gezet:
+```
+# command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}'
+```
+
+Vanaf dit punt moet verder gewerkt worden in de e2e_cli map. De repository van Hyperledger komt standaard met een aantal end to end tests. Deze end to end tests dienen een goede basis om een eigen netwerk op te zetten. 
+
+Navigeer nu naar de e2e_cli map:
+
+```
+cd /usr/local/go/src/github.com/hyperledger/fabric/examples/e2e_cli/
+```
+
+Nu zal de generateCfgTrx shell bestand aangeroepen moeten worden. Dit shell bestand is een hulpmiddel die de configxtgen tool build en aanroept met een vooraf opgegeven properties zoals het pad naar de genesis block en channel configuratie. Het is van belang dat je dezelfde channel naam gebruikt. Je kan namelijk meerdere channels starten op een machine.
+
+
+Creeer de configuratie die nodig is voor het werk:
+```
+./generateCfgTrx.sh mychannel
+```
+
+Nu de configuratie compleet is kan het netwerk worden gestart.
+
+Door de volgende command worden alle docker containers opgestart en verwezen naar de mychannel. 
+
 ```
 CHANNEL_NAME=mychannel docker-compose up -d 
 ```
 
-## generateCfgTrx.sh ##
-Dit script is een shell script die de configtxgen tool uitvoert. 
+Om commands uit te voeren in het netwerk levert Hyperledger een image waarin commands uitgevoerd kunnen worden op het netwerk.
+Deze image heeft cli. Voer de volgende docker command uit om in de container te komen:
 
-## Chaincode ##
-Chaincode moet geinstalleerd worden op een peer om lees en schrijf operaties te kunnen uitvoeren. Om een transactie te kunnen maken wordt een container opgestart waarin de chaincode uitgevoerd wordt.
-Hyperledger heeft de voorkeur voor de term chaincode in plaats van smart contracts.  
-
-## Zelf een netwerk opzetten ##
-Open de docker compose file in de e2e_cli map. Zet de lijn 
-```
-"/bin/bash -c './scripts/script.sh ${CHANNEL_NAME}'"
-```
-in commentaar door er een "#" voor te zetten. Kill alle containers en start het netwerk opnieuw op.
-Nu wordt alleen het netwerk opgestart en worden er verder geen transacties uitgevoerd.
-
-Als eerste gaan we een channel creeren in de CLI container. Open de CLI container door middel van de command: 
 ```
 docker exec -it cli bash
 ```
-Voer vervolgens de volgende command uit: 
+
+Nu je in de docker container zit kan je een channel creeren. In de command hieronder wordt de channel meegegeven. Als je een andere channel naam gebruikt verander dan de 'mychannel' naar jouw opgegeven channel naam. 
+
+Start een nieuwe channel:
+
 ```
 peer channel create -o orderer0:7050 -c mychannel -f crypto/orderer/channel.tx --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem
 ```
-Nu een channel gecreerd is kunnen peers de channel joinen. Op moment is de configuratie zo ingesteld dat alleen peer 0 aangeroepen wordt. Door de command hieronder kan een peer zich aanmelden: 
+
+Nu een channel gecreerd is kunnen peers de channel joinen. Op moment is de configuratie zo ingesteld dat alleen peer 0 aangeroepen wordt. Door de command hieronder kan een peer zich aanmelden:
+
 ```
 peer channel join -b mychannel.block
 ```
-Installeer nu de chaincode op peer 0 door de command:
+
+Om transacties op het netwerk uit te kunnen voeren moet chaincode geinstalleerd worden. Om een transactie te kunnen maken wordt een container opgestart waarin de chaincode uitgevoerd wordt. Hyperledger heeft de voorkeur voor de term chaincode in plaats van smart contracts. Daarom zul je vaak de term chaincode tegenkomen en niet smart contracts.
+
+Installeer de vooraf gedefinieerde chaincode op peer 0:
 
 ```
 peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
-Voer vervolgens de volgende command uit:
+
+HIER GEBLEVEN
+
 ```
 peer chaincode instantiate -o orderer0:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $GOPATH/src/github.com/hyperledger/fabric/peer/crypto/orderer/localMspConfig/cacerts/ordererOrg0.pem -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org0MSP.member','Org1MSP.member')"
 ```
