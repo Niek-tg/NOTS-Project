@@ -205,3 +205,9 @@ T(1, 'A', T(2, 'B', 'C'))
 ``` 
 
 Hierin geeft de policy aan, of een signature van principal A te willen of een signature van B en C.
+
+
+## Bronnen ##
+
+- Creeren van een eigen netwerk
+http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#start-the-network
