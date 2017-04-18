@@ -12,3 +12,12 @@ services:
       - 8545:8545
     links:
       - "ethereumhost:host"
+  app:
+    build: ./dapp-wallet
+    command: meteor --allow-superuser
+    working_dir: /home/app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dapp-wallet/app/:/home/app
+
