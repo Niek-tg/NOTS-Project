@@ -4,9 +4,11 @@ services:
     build: ./server/
     ports:
       - 30303:30303
+    stdin_open: true
   ethereumclient:
     build: ./client/
     ports:
       - 30304:30303
+      - 8545:8545
     links:
       - "ethereumhost:host"
