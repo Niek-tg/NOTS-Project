@@ -1,6 +1,0 @@
-version: '2'
-services:
-  ethereum:
-    build: ./ethereum_client/
-    ports:
-      - 8545:8545
